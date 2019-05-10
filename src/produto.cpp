@@ -42,7 +42,6 @@ void Produto::set_append_descricao(char c) {
 
 void Produto::lerDadosProduto(FILE *arquivoID) {
 
-	// id = novoId;
 
 	// Funcao lambda para ler o ID de um arquivo e incrementa-lo
 	auto lerId = 
@@ -203,9 +202,9 @@ Produto* ProdutoEntrada::recuperaProduto(FILE *arquivoDados, unsigned long int e
 
     fseek(arquivoDados, endereco, SEEK_SET);
 
-    lapide = fgetc(arquivoDados);
+    // lapide = fgetc(arquivoDados);
 
-    if ( lapide == (byte)' ' )
+    if ( fgetc(arquivoDados) == (byte)' ' )
     {
         // Recuperando o tamanho do vetor de bytes do arquivo
 	    // utilizando Binary Shift Left (operador "<<") para

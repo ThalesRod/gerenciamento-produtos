@@ -42,12 +42,12 @@ class ProdutoEntrada {
 
 	public:
 		unsigned long int armazenaProduto(FILE *arquivoDados, Produto *produto);
-		Produto* recuperaProduto(FILE *arquivoDados, unsigned long int endereco);
+		static Produto* recuperaProduto(FILE *arquivoDados, unsigned long int endereco);
 	
 	private:
 		std::vector<byte> produtoParaBytes(Produto* produto);
 		void floatBytesCopy(float paramFloat, std::vector<byte> &vetorDeBytes);
-		Produto* bytesParaProduto(std::vector<byte> vetorDeBytes);
+		static Produto* bytesParaProduto(std::vector<byte> vetorDeBytes);
 };
 
 #endif
