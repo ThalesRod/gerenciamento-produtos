@@ -2,6 +2,7 @@
 #define TABELA_H
 
 #include <iostream>
+#include <stdio.h>
 
 #define PROFUNDIDADE_TABELA 80
 #define TAM_BUCKET sizeof(EntradaIndice)

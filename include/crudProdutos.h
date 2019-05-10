@@ -2,6 +2,7 @@
 #define CRUDPRODUTOS_H
 
 #include <iostream>
+#include <stdio.h>
 
 class CrudProdutos {
 

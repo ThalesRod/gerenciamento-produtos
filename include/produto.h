@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 
+#include <stdio.h>
 
 typedef unsigned char byte;
 

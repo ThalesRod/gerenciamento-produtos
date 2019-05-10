@@ -3,6 +3,7 @@
 #include "../include/crudProdutos.h"
 
 #include <iostream>
+#include <stdio.h>
 
 int main(int argc, char const *argv[]) {
 
@@ -52,8 +53,8 @@ int main(int argc, char const *argv[]) {
 	// p->exibeDadosProduto();
 
     CrudProdutos *crud = new CrudProdutos();
-    crud->inclusao(arquivoIndice, arquivoDados, arquivoID);
-
+//    crud->inclusao(arquivoIndice, arquivoDados, arquivoID);
+    crud->busca(arquivoIndice, arquivoDados, 0);
 
     fclose(arquivoDados);
     fclose(arquivoID);
