@@ -5,6 +5,22 @@
 #include <iostream>
 #include <stdio.h>
 
+char menu(){
+
+    char RespostaMenu;
+
+    std::cout << "Opcoes: " << std::endl;
+    std::cout << "[I] - Inclusao" << std::endl;
+    std::cout << "[A] - Alteracao" << std::endl;
+    std::cout << "[E] - exclusao" << std::endl;
+    std::cout << "[B] - Busca" << std::endl;
+    std::cout << "[S] - Sair" << std::endl;
+    std::cout << "Qual a opcao desejada: ";
+    std::cin >> RespostaMenu;
+
+    return RespostaMenu;
+}
+
 int main(int argc, char const *argv[]) {
 
 	FILE *arquivoDados;
@@ -43,18 +59,44 @@ int main(int argc, char const *argv[]) {
         arquivoIndice = fopen("database/dados.index", "r+b");
     }
 
-	// Produto *p = new Produto();
-    // ProdutoEntrada pe;
 
-	// p->lerDadosProduto(arquivoID);
-	// pe.armazenaProduto(arquivoDados, p);
+    CrudProdutos *crudProdutos = new CrudProdutos();
 
-	// p = ProdutoEntrada::recuperaProduto(arquivoDados, 56);
-	// p->exibeDadosProduto();
+    char MenuResp;
 
-    CrudProdutos *crud = new CrudProdutos();
-//    crud->inclusao(arquivoIndice, arquivoDados, arquivoID);
-    crud->busca(arquivoIndice, arquivoDados, 0);
+    while(true) {
+        MenuResp = menu();
+
+        if(MenuResp=='I'){
+            getchar();
+            crudProdutos->inclusao(arquivoIndice, arquivoDados, arquivoID);
+            std::cout << std::endl;
+        }
+
+        if(MenuResp=='E'){
+            std::cout << "Digite o ID: ";
+            unsigned short id;
+            std::cin >> id;
+            crudProdutos->exclusao(arquivoIndice, arquivoDados, id);
+        }
+
+        if(MenuResp=='A'){
+            std::cout << "Digite o ID: ";
+            unsigned short id;
+            std::cin >> id;
+            getchar();
+            crudProdutos->alteracao(arquivoIndice, arquivoDados, arquivoID, id);
+        }
+
+        if(MenuResp=='B'){
+            std::cout << "Digite o ID: ";
+            unsigned short id;
+            std::cin >> id;
+            crudProdutos->busca(arquivoIndice, arquivoDados, id);
+        }
+        if(MenuResp == 'S')
+            break;
+    }
 
     fclose(arquivoDados);
     fclose(arquivoID);

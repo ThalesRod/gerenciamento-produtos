@@ -85,6 +85,8 @@ void Produto::exibeDadosProduto() {
 	std::cout << "Nome: " 		<< nome << std::endl;
 	std::cout << "Descricao: "	<< descricao << std::endl;
 	std::cout << "Preco: "		<< preco << std::endl;
+
+    std::cout << std::endl;
 }
 
 // =========== Metodos ProdutoEntrada ============================

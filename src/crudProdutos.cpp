@@ -34,16 +34,78 @@ void CrudProdutos::busca(FILE *arquivoIndice, FILE *arquivoDados, unsigned short
 
     p = ProdutoEntrada::recuperaProduto(arquivoDados, TabelaHash::lerIndice(arquivoIndice, id, TabelaHash::geraHash(id)));
 
-    std::cout << "Nome: " << p->get_nome() << std::endl;
-    std::cout << "Descricao: " << p->get_descricao() << std::endl;
-    std::cout << "Preco: " << p->get_preco() << std::endl;
+    p->exibeDadosProduto();
 
+    rewind(arquivoDados);
+    rewind(arquivoIndice);
 }
 
-void CrudProdutos::alteracao(FILE *arquivoIndice, FILE *arquivoDados, FILE *arquivoID, unsigned long int endereco) {
+void CrudProdutos::alteracao(FILE *arquivoIndice, FILE *arquivoDados, FILE *arquivoID, unsigned short id) {
 
+    Produto *p = new Produto();
+    ProdutoEntrada pe;
+    char confirmacao;
+
+    unsigned long int endereco = TabelaHash::lerIndice(arquivoIndice, id, TabelaHash::geraHash(id));
+
+    p = ProdutoEntrada::recuperaProduto(arquivoDados, endereco);
+
+    p->exibeDadosProduto();
+
+    std::cout << std::endl;
+
+    p->lerDadosProduto(arquivoID);
+
+    std::cout << "\nDeseja alterar esse produto? (s/n) ";
+    std::cin >> confirmacao;
+
+    if (confirmacao == 'n') {
+        rewind(arquivoDados);
+        return;
+    }
+
+    EntradaIndice *entrada = new EntradaIndice();
+    entrada->lapide = '$';
+    entrada->id = p->get_id();
+    entrada->endereco = pe.armazenaProduto(arquivoDados, p);
+
+    TabelaHash::escreveIndice(arquivoIndice, entrada, TabelaHash::geraHash(p->get_id() - 48));
+
+    rewind(arquivoDados);
+    rewind(arquivoIndice);
+
+
+    // Marcando registro alterado como excluido
+    fseek(arquivoDados, endereco, SEEK_SET);
+    fputc((byte)'*', arquivoDados);
+    fflush(arquivoDados);
+
+    rewind(arquivoDados);
 }
 
-void CrudProdutos::exclusao(FILE *arquivoDados, unsigned long int endereco) {
+void CrudProdutos::exclusao(FILE *arquivoIndice, FILE *arquivoDados, unsigned short id) {
+    
+    Produto* p = new Produto();
+    char confirmacao;
 
+    unsigned long int endereco = TabelaHash::lerIndice(arquivoIndice, id, TabelaHash::geraHash(id));
+
+    p = ProdutoEntrada::recuperaProduto(arquivoDados, endereco);
+
+    p->exibeDadosProduto();
+
+    std::cout << "\nDeseja excluir esse produto? (s/n) ";
+    std::cin >> confirmacao;
+
+    if (confirmacao == 'n') {
+        rewind(arquivoDados);
+        return;
+    }
+
+    // Marcando registro como excluido
+    fseek(arquivoDados, endereco, SEEK_SET);
+    fputc((byte)'*', arquivoDados);
+    fflush(arquivoDados);
+
+    rewind(arquivoDados);
 }

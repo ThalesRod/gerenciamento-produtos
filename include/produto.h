@@ -17,6 +17,7 @@ class Produto {
 	std::string nome;
 	std::string descricao;
 	float preco;
+	unsigned short idCategoria;
 
 	public:
 		// Getters
