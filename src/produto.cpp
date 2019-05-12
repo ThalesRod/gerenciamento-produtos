@@ -20,6 +20,10 @@ float Produto::get_preco() {
 	return preco;
 }
 
+unsigned short Produto::get_idCategoria() {
+    return idCategoria;
+}
+
 // ======= Setters
 
 void Produto::set_id(unsigned short novoId) {
@@ -38,6 +42,9 @@ void Produto::set_append_descricao(char c) {
 	descricao += c;
 }
 
+void Produto::set_idCategoria(unsigned short novoId) {
+    idCategoria = novoId;
+}
 // ======= Metodos de manipulacao de Produto
 
 void Produto::lerDadosProduto(FILE *arquivoID) {
@@ -71,9 +78,12 @@ void Produto::lerDadosProduto(FILE *arquivoID) {
 
     std::cout << "Digite o preco do produto: ";
     std::cin >> preco;
+
+    std::cout << "Digite o ID da categoria do produto: ";
+    std::cin >> idCategoria;
 }
 
-void Produto::exibeDadosProduto() {
+void Produto::exibeDadosProduto(FILE *arquivoIndiceCategorias = NULL, FILE *arquivoDadosCategorias = NULL) {
 
 	if( id == 65535 ) {
 		std::cout << "\n=== Produto nao encontrado! ===\n" << std::endl;
@@ -85,6 +95,10 @@ void Produto::exibeDadosProduto() {
 	std::cout << "Nome: " 		<< nome << std::endl;
 	std::cout << "Descricao: "	<< descricao << std::endl;
 	std::cout << "Preco: "		<< preco << std::endl;
+
+    if ( arquivoIndiceCategorias != NULL && arquivoDadosCategorias != NULL )
+        CrudCategorias::busca(arquivoIndiceCategorias, arquivoDadosCategorias, idCategoria);
+
 
     std::cout << std::endl;
 }
@@ -168,6 +182,11 @@ std::vector<byte> ProdutoEntrada::produtoParaBytes(Produto* produto) {
     // Adicionando o preco
     ProdutoEntrada::floatBytesCopy(produto->get_preco(), novoVetorDeBytes);
 
+    novoVetorDeBytes.push_back(separador);
+
+    // Adicionando ID Categoria
+    novoVetorDeBytes.push_back((byte)produto->get_idCategoria());
+
     return novoVetorDeBytes;
 }
 
@@ -202,8 +221,14 @@ Produto* ProdutoEntrada::recuperaProduto(FILE *arquivoDados, unsigned long int e
     if (endereco == (unsigned long int) -1 )
         return produtoRecuperado;
 
-    fseek(arquivoDados, endereco, SEEK_SET);
+    if ( fseek(arquivoDados, endereco, SEEK_SET) != 0) {
+        
+        produtoRecuperado->set_id(-2);
 
+        rewind(arquivoDados);
+        return produtoRecuperado;
+    }
+    
     // lapide = fgetc(arquivoDados);
 
     if ( fgetc(arquivoDados) == (byte)' ' )
@@ -249,7 +274,9 @@ Produto* ProdutoEntrada::bytesParaProduto(std::vector<byte> vetorDeBytes) {
     std::vector<byte> id(vetorDeBytes.begin(), vetorDeBytes.begin() + separadorPos[0]);
     std::vector<byte> nome(vetorDeBytes.begin() + (separadorPos[0] + 1), vetorDeBytes.begin() + separadorPos[1]);
     std::vector<byte> descricao(vetorDeBytes.begin() + (separadorPos[1] + 1), vetorDeBytes.begin() + separadorPos[2]);
-    std::vector<byte> preco(vetorDeBytes.begin() + (separadorPos[2] + 1), vetorDeBytes.end());
+    std::vector<byte> preco(vetorDeBytes.begin() + (separadorPos[2] + 1), vetorDeBytes.begin() + separadorPos[3]);
+    std::vector<byte> idCategoria(vetorDeBytes.begin() + (separadorPos[3] + 1), vetorDeBytes.end());
+
 
 
     // Armazenado cada vetor em um campo do Produto
@@ -270,6 +297,8 @@ Produto* ProdutoEntrada::bytesParaProduto(std::vector<byte> vetorDeBytes) {
 	// Logica inversa da funcao ProdutoEntrada::floatBytesCopy
 	// Usada para recuperar o float a partir dos 4 bytes armazenados no arquivo
     produto->set_preco( (float) int(preco[0] << 24 | preco[1] << 16 | preco[2] << 8 | preco[3]) / 100 );
+
+    produto->set_idCategoria( (unsigned short) idCategoria[0] );
 
     return produto;
 }

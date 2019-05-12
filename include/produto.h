@@ -1,6 +1,8 @@
 #ifndef PRODUTO_H
 #define PRODUTO_H
 
+#include "../include/crudCategorias.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -25,15 +27,17 @@ class Produto {
 		std::string get_nome();
 		std::string get_descricao();
 		float get_preco();
-
+		unsigned short get_idCategoria();
+		
 		// Setters
 		void set_id(unsigned short novoId);
 		void set_preco(float novoPreco);
 		void set_append_nome(char c);
 		void set_append_descricao(char c);
-
+		void set_idCategoria(unsigned short novoId);
+		
 		void lerDadosProduto(FILE *arquivoID);
-		void exibeDadosProduto();		
+		void exibeDadosProduto(FILE *arquivoIndiceCategorias, FILE *arquivoDadosCategorias);		
 };
 
 class ProdutoEntrada {
