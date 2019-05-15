@@ -61,7 +61,9 @@ unsigned long int TabelaHash::lerIndice(FILE *arquivoIndice, unsigned short id, 
     EntradaIndice entrada;
     fread(&entrada, sizeof(EntradaIndice), 1, arquivoIndice);
 
-    endereco = entrada.endereco;
+
+    if ( entrada.lapide == '$' ) // Verifica se nao e uma posicao vazia
+        endereco = entrada.endereco;
 
     rewind(arquivoIndice);
     return endereco;

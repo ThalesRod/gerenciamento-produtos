@@ -1,8 +1,12 @@
 #include "../include/produto.h"
 #include "../include/categoria.h"
+#include "../include/cliente.h"
+#include "../include/compra.h"
 #include "../include/tabela.h"
 #include "../include/crudProdutos.h"
 #include "../include/crudCategorias.h"
+#include "../include/crudClientes.h"
+#include "../include/crudCompras.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -26,6 +30,21 @@ char menu(){
     std::cout << "[3] - Exclusao - Categoria" << std::endl;
     std::cout << "[4] - Busca - Categoria" << std::endl;
 
+    std::cout << "\nOpcoes clientes:\n " << std::endl;
+
+    std::cout << "[5] - Inclusao - Cliente" << std::endl;
+    std::cout << "[6] - Alteracao - Cliente" << std::endl;
+    std::cout << "[7] - Exclusao - Cliente" << std::endl;
+    std::cout << "[8] - Busca - Cliente" << std::endl;
+    std::cout << "[9] - Listar - Cliente" << std::endl;
+
+    std::cout << "\nOpcoes compras:\n " << std::endl;
+
+    std::cout << "[G] - Inclusao - Compra" << std::endl;
+    std::cout << "[H] - Alteracao - Compra" << std::endl;
+    std::cout << "[J] - Exclusao - Compra" << std::endl;
+    std::cout << "[K] - Busca - Compra" << std::endl;
+
     std::cout << "\n[S] - Sair" << std::endl;
 
     std::cout << "Qual a opcao desejada: ";
@@ -43,6 +62,14 @@ int main(int argc, char const *argv[]) {
     FILE *arquivoDadosCategorias;
     FILE *arquivoIndiceCategorias;
     FILE *arquivoIDCategorias;
+
+    FILE *arquivoDadosClientes;
+    FILE *arquivoIndiceClientes;
+    FILE *arquivoIDClientes;
+
+    FILE *arquivoDadosCompras;
+    FILE *arquivoIndiceCompras;
+    FILE *arquivoIDCompras;
 
     // Iniciando os Bancos de Dados de Produtos
 
@@ -108,11 +135,75 @@ int main(int argc, char const *argv[]) {
         arquivoIndiceCategorias = fopen("database/categorias.index", "r+b");
     }
 
+    // Iniciando os Bancos de Dados de Clientes
 
+    arquivoDadosClientes = fopen("database/clientes.db", "r+b");
+
+    if (arquivoDadosClientes == NULL) {
+        arquivoDadosClientes = fopen("database/clientes.db", "wb");
+        fclose(arquivoDadosClientes);
+        arquivoDadosClientes = fopen("database/clientes.db", "r+b");
+    }
+
+    arquivoIDClientes = fopen("database/clientes.id", "r+b");
+
+    if (arquivoIDClientes == NULL) {
+        arquivoIDClientes = fopen("database/clientes.id", "wb");
+        fputc((byte)'0', arquivoIDClientes);
+        fclose(arquivoIDClientes);
+
+        arquivoIDClientes = fopen("database/clientes.id", "r+b");
+    }
+
+    arquivoIndiceClientes = fopen("database/clientes.index", "r+b");
+
+    if (arquivoIndiceClientes == NULL) {
+        arquivoIndiceClientes = fopen("database/clientes.index", "wb");
+    
+        TabelaHash::inicializa(arquivoIndiceClientes);
+    
+        fclose(arquivoIndiceClientes);
+
+        arquivoIndiceClientes = fopen("database/clientes.index", "r+b");
+    }
+
+    // Iniciando os Bancos de Dados de Compras
+
+    arquivoDadosCompras = fopen("database/compras.db", "r+b");
+
+    if (arquivoDadosCompras == NULL) {
+        arquivoDadosCompras = fopen("database/compras.db", "wb");
+        fclose(arquivoDadosCompras);
+        arquivoDadosCompras = fopen("database/compras.db", "r+b");
+    }
+
+    arquivoIDCompras = fopen("database/compras.id", "r+b");
+
+    if (arquivoIDCompras == NULL) {
+        arquivoIDCompras = fopen("database/compras.id", "wb");
+        fputc((byte)'0', arquivoIDCompras);
+        fclose(arquivoIDCompras);
+
+        arquivoIDCompras = fopen("database/compras.id", "r+b");
+    }
+
+    arquivoIndiceCompras = fopen("database/compras.index", "r+b");
+
+    if (arquivoIndiceCompras == NULL) {
+        arquivoIndiceCompras = fopen("database/compras.index", "wb");
+    
+        TabelaHash::inicializa(arquivoIndiceCompras);
+    
+        fclose(arquivoIndiceCompras);
+
+        arquivoIndiceCompras = fopen("database/compras.index", "r+b");
+    }
 
 
     CrudProdutos *crudProdutos = new CrudProdutos();
     CrudCategorias *crudCategorias = new CrudCategorias();
+    CrudClientes *crudClientes = new CrudClientes();
+    CrudCompras *crudCompras = new CrudCompras();
 
     char MenuResp;
 
@@ -183,6 +274,70 @@ int main(int argc, char const *argv[]) {
             crudCategorias->busca(arquivoIndiceCategorias, arquivoDadosCategorias, id);
         }
 
+        // Opcoes Clientes
+
+        if(MenuResp=='5'){
+            getchar();
+            crudClientes->inclusao(arquivoIndiceClientes, arquivoDadosClientes, arquivoIDClientes);
+            std::cout << std::endl;
+        }
+
+        if(MenuResp=='7'){
+            std::cout << "Digite o ID: ";
+            unsigned short id;
+            std::cin >> id;
+            crudClientes->exclusao(arquivoIndiceClientes, arquivoDadosClientes, id);
+        }
+
+        if(MenuResp=='6'){
+            std::cout << "Digite o ID: ";
+            unsigned short id;
+            std::cin >> id;
+            getchar();
+            crudClientes->alteracao(arquivoIndiceClientes, arquivoDadosClientes, arquivoIDClientes, id);
+        }
+
+        if(MenuResp=='8'){
+            std::cout << "Digite o ID: ";
+            unsigned short id;
+            std::cin >> id;
+            crudClientes->busca(arquivoIndiceClientes, arquivoDadosClientes, id);
+        }
+
+        if(MenuResp=='9'){
+            crudClientes->listar(arquivoIndiceClientes, arquivoDadosClientes, arquivoIDClientes);
+        }
+
+        // Opcoes Compras
+
+        if(MenuResp=='G'){
+            getchar();
+            crudCompras->inclusao(arquivoIndiceCompras, arquivoDadosCompras, arquivoIDCompras, arquivoIndiceClientes, arquivoDadosClientes);
+            std::cout << std::endl;
+        }
+
+        if(MenuResp=='J'){
+            std::cout << "Digite o ID: ";
+            unsigned short id;
+            std::cin >> id;
+            crudCompras->exclusao(arquivoIndiceCompras, arquivoDadosCompras, arquivoIndiceClientes, arquivoDadosClientes, arquivoIndice, arquivoDados, arquivoIndiceCategorias, arquivoDadosCategorias, id);
+        }
+
+        if(MenuResp=='H'){
+            std::cout << "Digite o ID: ";
+            unsigned short id;
+            std::cin >> id;
+            getchar();
+            crudCompras->alteracao(arquivoIndiceCompras, arquivoDadosCompras, arquivoIDCompras, arquivoIndiceClientes, arquivoDadosClientes, arquivoIndice, arquivoDados, arquivoIndiceCategorias, arquivoDadosCategorias, id);
+        }
+
+        if(MenuResp=='K'){
+            std::cout << "Digite o ID: ";
+            unsigned short id;
+            std::cin >> id;
+            crudCompras->busca(arquivoIndiceCompras, arquivoDadosCompras, arquivoIndiceClientes, arquivoDadosClientes, arquivoIndice, arquivoDados, arquivoIndiceCategorias, arquivoDadosCategorias, id);
+        }
+
         if(MenuResp == 'S')
             break;
     }
@@ -194,6 +349,14 @@ int main(int argc, char const *argv[]) {
     fclose(arquivoDadosCategorias);
     fclose(arquivoIDCategorias);
     fclose(arquivoIndiceCategorias);
+
+    fclose(arquivoDadosClientes);
+    fclose(arquivoIndiceClientes);
+    fclose(arquivoIDClientes);
+
+    fclose(arquivoDadosCompras);
+    fclose(arquivoIndiceCompras);
+    fclose(arquivoIDCompras);
 
 	return 0;
 }

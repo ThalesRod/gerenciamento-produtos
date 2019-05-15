@@ -220,15 +220,9 @@ Produto* ProdutoEntrada::recuperaProduto(FILE *arquivoDados, unsigned long int e
 
     if (endereco == (unsigned long int) -1 )
         return produtoRecuperado;
-
-    if ( fseek(arquivoDados, endereco, SEEK_SET) != 0) {
-        
-        produtoRecuperado->set_id(-2);
-
-        rewind(arquivoDados);
-        return produtoRecuperado;
-    }
     
+    fseek(arquivoDados, endereco, SEEK_SET);
+
     // lapide = fgetc(arquivoDados);
 
     if ( fgetc(arquivoDados) == (byte)' ' )

@@ -12,7 +12,7 @@ class CrudProdutos {
 
 	public:
 		void inclusao(FILE *arquivoIndice, FILE *arquivoDados, FILE *arquivoID, FILE *arquivoIndiceCategorias, FILE *arquivoDadosCategorias);
-		void busca(FILE *arquivoIndice, FILE *arquivoDados, FILE *arquivoIndiceCategorias, FILE *arquivoDadosCategorias, unsigned short id);
+		static void busca(FILE *arquivoIndice, FILE *arquivoDados, FILE *arquivoIndiceCategorias, FILE *arquivoDadosCategorias, unsigned short id);
 		void alteracao(FILE *arquivoIndice, FILE *arquivoDados, FILE *arquivoID, FILE *arquivoIndiceCategorias, FILE *arquivoDadosCategorias, unsigned short id);
 		void exclusao(FILE *arquivoIndice, FILE *arquivoDados, FILE *arquivoIndiceCategorias, FILE *arquivoDadosCategorias, unsigned short id);
 		void listar(FILE *arquivoIndice, FILE *arquivoDados, FILE *arquivoID);
